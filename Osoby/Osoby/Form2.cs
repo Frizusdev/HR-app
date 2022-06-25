@@ -17,10 +17,10 @@ namespace Osoby
         {
             InitializeComponent();
         }
-
+        string connection = "server=localhost;port=3306;username=root;password=;database=pracownicy";
         void pobierzdane()
         {
-            string connection = "server=localhost;port=3306;username=root;password=;database=pracownicy";
+            
             MySqlConnection con = new MySqlConnection(connection);
             MySqlCommand command = con.CreateCommand();
             command.CommandText = "SELECT * FROM osoby ";
@@ -46,7 +46,6 @@ namespace Osoby
         {
             if (name.Text != "" && surname.Text != "" && stage.Text != "" && tel.Text != "" && dniur.Text != "" && salary.Text != "")
             {
-                string connection = "server=localhost;port=3306;username=root;password=;database=pracownicy";
                 MySqlConnection con = new MySqlConnection(connection);
                 MySqlCommand command = con.CreateCommand();
                 command.CommandText = "INSERT INTO `osoby`" +
@@ -68,7 +67,6 @@ namespace Osoby
 
         void usunpracownika()
         {
-            string connection = "server=localhost;port=3306;username=root;password=;database=pracownicy";
             MySqlConnection con = new MySqlConnection(connection);
             MySqlCommand command = con.CreateCommand();
             command.CommandText = "DELETE FROM `osoby` WHERE ID = "+id.Text+"";
@@ -86,7 +84,6 @@ namespace Osoby
         }
         void zmianapracownik()
         {
-            string connection = "server=localhost;port=3306;username=root;password=;database=pracownicy";
             MySqlConnection con = new MySqlConnection(connection);
             MySqlCommand command = con.CreateCommand();
             command.CommandText = "UPDATE `osoby` SET `Imię`='" + namenew.Text + "',`Nazwisko`='" + surnamenew.Text + "',`Stanowisko`='" + stagenew.Text + "',`Data_Urodzenia`='" + dataurnew.Value.ToString() + "',`Data_Zatrudnienia`='" + datazatnew.Value.ToString() + "',`Telefon`='" + telnew.Text + "',`Data_Rozpoczęcia_Urlopu`='" + dataurstartnew.Value.ToString() + "',`Data_Zakończenia_Urlopu`='" + dataurendnew.Value.ToString() + "',`Dni_Urlopu`='" + dniurnew.Text + "',`Stawka`='" + salarynew.Text + "' WHERE ID=" + id.Text + "";
@@ -104,7 +101,6 @@ namespace Osoby
 
         void szukaj()
         {
-            string connection = "server=localhost;port=3306;username=root;password=;database=pracownicy";
             MySqlConnection con = new MySqlConnection(connection);
             MySqlCommand command = con.CreateCommand();
             command.CommandText = "SELECT * FROM `osoby` where id=" + id.Text;
@@ -146,6 +142,13 @@ namespace Osoby
 
         private void Form2_Load(object sender, EventArgs e)
         {
+            //osoby
+            MySqlConnection con = new MySqlConnection(connection);
+            con.Open();
+            MySqlCommand command = con.CreateCommand();
+            command.CommandText = "CREATE TABLE IF NOT EXISTS `osoby` (`ID` int(11) NOT NULL,`Imię` text NOT NULL,`Nazwisko` text NOT NULL,`Stanowisko` text NOT NULL,`Data_Urodzenia` text NOT NULL,`Data_Zatrudnienia` text NOT NULL,`Telefon` mediumint(9) NOT NULL,`Data_Rozpoczęcia_Urlopu` text NOT NULL,`Data_Zakończenia_Urlopu` text NOT NULL,`Dni_Urlopu` tinyint(4) NOT NULL,`Stawka` float NOT NULL) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;";
+            command.ExecuteNonQuery();
+            con.Close();
             pobierzdane();
         }
 
@@ -163,8 +166,11 @@ namespace Osoby
 
         private void zmien_Click(object sender, EventArgs e)
         {
+            if(namenew.Text != "" && surnamenew.Text != "" && stagenew.Text != "" && telnew.Text != "" && dniurnew.Text != "" && salarynew.Text != "")
+            { 
             zmianapracownik();
             pobierzdane();
+            }
         }
 
         private void search_Click(object sender, EventArgs e)
